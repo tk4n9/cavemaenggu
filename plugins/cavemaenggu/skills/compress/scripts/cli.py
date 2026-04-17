@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-Caveman Compress CLI
+Cavemaenggu Compress CLI
 
 Usage:
-    caveman <filepath>
+    python -m scripts <filepath>
 """
 
 import sys
@@ -14,7 +14,7 @@ from .detect import detect_file_type, should_compress
 
 
 def print_usage():
-    print("Usage: caveman <filepath>")
+    print("Usage: python -m scripts <filepath>")
 
 
 def main():
