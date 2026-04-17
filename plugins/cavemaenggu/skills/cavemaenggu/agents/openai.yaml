@@ -1,0 +1,6 @@
+interface:
+  display_name: "Cavemaenggu"
+  short_description: "Talk like smart caveman. Cut filler. Keep technical accuracy. Korean maeng-gu family also available."
+  icon_small: "./assets/cavemaenggu-small.svg"
+  icon_large: "./assets/cavemaenggu.svg"
+  default_prompt: "Use $cavemaenggu to answer briefly, cut filler, and preserve exact technical substance. Switch to Korean 개조식/전보체 with maeng-gu levels."

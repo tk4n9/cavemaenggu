@@ -1,15 +1,15 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
-  "name": "caveman",
-  "description": "Ultra-compressed communication mode for Claude Code. Cuts ~75% of tokens while keeping full technical accuracy.",
+  "name": "cavemaenggu",
+  "description": "Ultra-compressed communication mode (caveman + 맹구 fork) for Claude Code. Cuts ~75% of tokens while keeping full technical accuracy. Korean activation via 맹구.",
   "owner": {
-    "name": "Julius Brussee",
-    "url": "https://github.com/JuliusBrussee"
+    "name": "tk4n9",
+    "url": "https://github.com/tk4n9"
   },
   "plugins": [
     {
-      "name": "caveman",
-      "description": "Talk like caveman. Cut ~75% tokens. Keep all technical accuracy.",
+      "name": "cavemaenggu",
+      "description": "Talk like smart caveman. Cut ~75% tokens. Keep all technical accuracy. Switch to Korean 개조식/전보체 with /mg maeng-gu.",
       "source": "./",
       "category": "productivity"
     }
