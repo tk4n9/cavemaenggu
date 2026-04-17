@@ -2,7 +2,7 @@
   <img src="https://em-content.zobj.net/source/apple/391/rock_1faa8.png" width="80" />
 </p>
 
-<h1 align="center">caveman-compress</h1>
+<h1 align="center">cavemaenggu-compress</h1>
 
 <p align="center">
   <strong>shrink memory file. save token every session.</strong>
@@ -10,14 +10,14 @@
 
 ---
 
-A Claude Code skill that compresses your project memory files (`CLAUDE.md`, todos, preferences) into caveman format — so every session loads fewer tokens automatically.
+A Claude Code skill that compresses your project memory files (`CLAUDE.md`, todos, preferences) into cavemaenggu format — so every session loads fewer tokens automatically.
 
-Claude read `CLAUDE.md` on every session start. If file big, cost big. Caveman make file small. Cost go down forever.
+Claude read `CLAUDE.md` on every session start. If file big, cost big. Cavemaenggu make file small. Cost go down forever.
 
 ## What It Do
 
 ```
-/caveman:compress CLAUDE.md
+/cavemaenggu:compress CLAUDE.md
 ```
 
 ```
@@ -55,7 +55,7 @@ All validations passed ✅ — headings, code blocks, URLs, file paths preserved
 </td>
 <td width="50%">
 
-### 🪨 Caveman (285 tokens)
+### 🪨 Cavemaenggu (285 tokens)
 
 > "Prefer TypeScript strict mode always. No `any` unless unavoidable — comment why if used. Proper types catch bugs early."
 
@@ -67,16 +67,16 @@ All validations passed ✅ — headings, code blocks, URLs, file paths preserved
 
 ## Security
 
-`caveman-compress` is flagged as Snyk High Risk due to subprocess and file I/O patterns detected by static analysis. This is a false positive — see [SECURITY.md](./SECURITY.md) for a full explanation of what the skill does and does not do.
+`cavemaenggu-compress` is flagged as Snyk High Risk due to subprocess and file I/O patterns detected by static analysis. This is a false positive — see [SECURITY.md](./SECURITY.md) for a full explanation of what the skill does and does not do.
 
 ## Install
 
-Compress is built in with the `caveman` plugin. Install `caveman` once, then use `/caveman:compress`.
+Compress is built in with the `cavemaenggu` plugin. Install `cavemaenggu` once, then use `/cavemaenggu:compress`.
 
 If you need local files, the compress skill lives at:
 
 ```bash
-caveman-compress/
+cavemaenggu-compress/
 ```
 
 **Requires:** Python 3.10+
@@ -84,14 +84,14 @@ caveman-compress/
 ## Usage
 
 ```
-/caveman:compress <filepath>
+/cavemaenggu:compress <filepath>
 ```
 
 Examples:
 ```
-/caveman:compress CLAUDE.md
-/caveman:compress docs/preferences.md
-/caveman:compress todos.md
+/cavemaenggu:compress CLAUDE.md
+/cavemaenggu:compress docs/preferences.md
+/cavemaenggu:compress todos.md
 ```
 
 ### What files work
@@ -106,7 +106,7 @@ Examples:
 ## How It Work
 
 ```
-/caveman:compress CLAUDE.md
+/cavemaenggu:compress CLAUDE.md
         ↓
 detect file type        (no tokens)
         ↓
@@ -128,7 +128,7 @@ Only two things use tokens: initial compression + targeted fix if validation fai
 
 ## What Is Preserved
 
-Caveman compress natural language. It never touch:
+Cavemaenggu compress natural language. It never touch:
 
 - Code blocks (` ``` ` fenced or indented)
 - Inline code (`` `backtick content` ``)
@@ -144,7 +144,7 @@ Caveman compress natural language. It never touch:
 
 `CLAUDE.md` loads on **every session start**. A 1000-token project memory file costs tokens every single time you open a project. Over 100 sessions that's 100,000 tokens of overhead — just for context you already wrote.
 
-Caveman cut that by ~46% on average. Same instructions. Same accuracy. Less waste.
+Cavemaenggu cut that by ~46% on average. Same instructions. Same accuracy. Less waste.
 
 ```
 ┌────────────────────────────────────────────┐
@@ -155,9 +155,9 @@ Caveman cut that by ~46% on average. Same instructions. Same accuracy. Less wast
 └────────────────────────────────────────────┘
 ```
 
-## Part of Caveman
+## Part of Cavemaenggu
 
-This skill is part of the [caveman](https://github.com/JuliusBrussee/caveman) toolkit — making Claude use fewer tokens without losing accuracy.
+This skill is part of the [cavemaenggu](https://github.com/tk4n9/cavemaenggu) toolkit — making Claude use fewer tokens without losing accuracy. Forked from [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman); compress logic inherited from upstream.
 
-- **caveman** — make Claude *speak* like caveman (cuts response tokens ~65%)
-- **caveman-compress** — make Claude *read* less (cuts context tokens ~46%)
+- **cavemaenggu** — make Claude *speak* like caveman / 맹구 (cuts response tokens ~65%)
+- **cavemaenggu-compress** — make Claude *read* less (cuts context tokens ~46%)

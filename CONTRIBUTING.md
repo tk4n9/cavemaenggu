@@ -5,15 +5,17 @@ Improvements to the SKILL.md prompt are welcome — open a PR with before/after 
 ## How
 
 1. Fork repo
-2. Edit `skills/caveman/SKILL.md` — this is the only copy you need to touch
+2. Edit `skills/cavemaenggu/SKILL.md` — this is the only copy you need to touch
 3. Open PR with:
-   - **Before:** what caveman say now
-   - **After:** what caveman say with change
+   - **Before:** what cavemaenggu say now
+   - **After:** what cavemaenggu say with change
    - One sentence why change better
 
-> **Note:** `caveman/SKILL.md`, `plugins/caveman/skills/caveman/SKILL.md`, `.cursor/skills/caveman/SKILL.md`, and `caveman.skill` are auto-synced by CI after merge. Do not edit them directly.
-> 
-> **Note on compress skill:** If you are modifying the compress skill, edit `caveman-compress/SKILL.md` or `caveman-compress/scripts/`. CI will automatically sync these changes to `skills/compress/` and `plugins/caveman/skills/compress/`.
+> **Note:** `cavemaenggu/SKILL.md`, `plugins/cavemaenggu/skills/cavemaenggu/SKILL.md`, `.cursor/skills/cavemaenggu/SKILL.md`, `.windsurf/skills/cavemaenggu/SKILL.md`, and `cavemaenggu.skill` are auto-synced by CI after merge. Do not edit them directly.
+>
+> **Note on compress skill:** If you are modifying the compress skill, edit `cavemaenggu-compress/SKILL.md` or `cavemaenggu-compress/scripts/`. CI will automatically sync these changes to `skills/compress/` and `plugins/cavemaenggu/skills/compress/`.
+
+> **Note on slash commands:** `commands/cavemaenggu*.toml` and `commands/mg*.toml` are paired — the `/mg` short alias must stay in sync with `/cavemaenggu`. Edit both when changing prompts.
 
 Small focused change > big rewrite. Caveman like simple.
 

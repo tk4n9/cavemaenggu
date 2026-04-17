@@ -45,7 +45,7 @@ def main():
         print("Skipping: file is not natural language (code/config)")
         sys.exit(0)
 
-    print("Starting caveman compression...\n")
+    print("Starting cavemaenggu compression...\n")
 
     try:
         success = compress_file(filepath)
