@@ -16,6 +16,23 @@ process.stdin.on('end', () => {
   try {
     const data = JSON.parse(input);
     const prompt = (data.prompt || '').trim().toLowerCase();
+    // Hangul has no case — keep the raw prompt so future tweaks to lowercasing
+    // do not silently break Korean activation.
+    const rawPrompt = (data.prompt || '').trim();
+
+    // Hangul activation/deactivation matchers. Defined once so the deactivation
+    // block below can reuse the same regex.
+    //
+    // Activation is intentionally permissive: any mention of 맹구 (e.g. "맹구야",
+    // "맹구 모드", "맹구로 말해") flips the flag to `maeng-gu` (alias for
+    // maeng-gu-full). README documents the trade-off — a prompt asking about the
+    // cartoon character of the same name will also activate. Users revert with
+    // "stop caveman", "보통 모드", or any /caveman slash.
+    //
+    // Deactivation matches "맹구 꺼/그만/종료/해제/중단/중지" and any of the common
+    // "normal mode" Korean glosses (보통/정상/기본/일반/평소 + 모드/말투).
+    const KOREAN_ACTIVATE = /맹구/u;
+    const KOREAN_DEACTIVATE = /맹구\s*(?:꺼|그만|종료|해제|중단|중지)|(?:보통|정상|기본|일반|평소)\s*(?:모드|말투)/u;
 
     // Natural language activation (e.g. "activate caveman", "turn on caveman mode",
     // "talk like caveman"). README tells users they can say these, but the hook
@@ -27,6 +44,18 @@ process.stdin.on('end', () => {
         if (mode !== 'off') {
           safeWriteFlag(flagPath, mode);
         }
+      }
+    }
+
+    // Korean (Hangul) natural-language activation for maeng-gu mode.
+    // Always writes 'maeng-gu' (= maeng-gu-full alias) regardless of
+    // CAVEMAN_DEFAULT_MODE — the user explicitly chose CJK-script compression
+    // by speaking Korean, so respect that intent over the configured default.
+    // Still honors the off switch: if default mode is 'off', user has globally
+    // disabled auto-activation and we do not override.
+    if (KOREAN_ACTIVATE.test(rawPrompt) && !KOREAN_DEACTIVATE.test(rawPrompt)) {
+      if (getDefaultMode() !== 'off') {
+        safeWriteFlag(flagPath, 'maeng-gu');
       }
     }
 
@@ -60,10 +89,11 @@ process.stdin.on('end', () => {
       }
     }
 
-    // Detect deactivation — natural language and slash commands
+    // Detect deactivation — natural language (English + Korean) and slash commands
     if (/\b(stop|disable|deactivate|turn off)\b.*\bcaveman\b/i.test(prompt) ||
         /\bcaveman\b.*\b(stop|disable|deactivate|turn off)\b/i.test(prompt) ||
-        /\bnormal mode\b/i.test(prompt)) {
+        /\bnormal mode\b/i.test(prompt) ||
+        KOREAN_DEACTIVATE.test(rawPrompt)) {
       try { fs.unlinkSync(flagPath); } catch (e) {}
     }
 

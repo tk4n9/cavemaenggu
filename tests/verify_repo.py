@@ -360,6 +360,59 @@ def verify_hook_install_flow() -> None:
             + (claude_dir / ".caveman-active").read_text(),
         )
 
+        # Korean (Hangul) natural-language activation: any 맹구 mention writes
+        # the maeng-gu alias regardless of CAVEMAN_DEFAULT_MODE.
+        for phrase in ("맹구야 안녕", "맹구 모드로 답해", "맹구로 말해"):
+            (claude_dir / ".caveman-active").unlink(missing_ok=True)
+            subprocess.run(
+                ["node", "hooks/caveman-mode-tracker.js"],
+                cwd=ROOT,
+                env={**os.environ, "HOME": str(home)},
+                text=True,
+                input=json.dumps({"prompt": phrase}),
+                capture_output=True,
+                check=True,
+            )
+            ensure(
+                (claude_dir / ".caveman-active").read_text() == "maeng-gu",
+                f"Korean phrase '{phrase}' should set maeng-gu, got: "
+                + (claude_dir / ".caveman-active").read_text(),
+            )
+
+        # Korean deactivation phrases must clear the flag even when 맹구 is in
+        # the same prompt — activation regex must NOT win over deactivation.
+        for phrase in ("맹구 꺼", "맹구 그만", "보통 모드", "정상 말투로 돌아가"):
+            (claude_dir / ".caveman-active").write_text("maeng-gu")
+            subprocess.run(
+                ["node", "hooks/caveman-mode-tracker.js"],
+                cwd=ROOT,
+                env={**os.environ, "HOME": str(home)},
+                text=True,
+                input=json.dumps({"prompt": phrase}),
+                capture_output=True,
+                check=True,
+            )
+            ensure(
+                not (claude_dir / ".caveman-active").exists(),
+                f"Korean deactivation '{phrase}' should remove flag",
+            )
+
+        # CAVEMAN_DEFAULT_MODE=off must veto Korean auto-activation as well.
+        (claude_dir / ".caveman-active").unlink(missing_ok=True)
+        subprocess.run(
+            ["node", "hooks/caveman-mode-tracker.js"],
+            cwd=ROOT,
+            env={**os.environ, "HOME": str(home), "CAVEMAN_DEFAULT_MODE": "off"},
+            text=True,
+            input='{"prompt":"맹구야"}',
+            capture_output=True,
+            check=True,
+        )
+        ensure(
+            not (claude_dir / ".caveman-active").exists(),
+            "Korean 맹구 should not activate when CAVEMAN_DEFAULT_MODE=off",
+        )
+
         activate_mg = run(
             ["node", "hooks/caveman-activate.js"],
             env={"HOME": str(home), "CAVEMAN_DEFAULT_MODE": "maeng-gu-full"},
