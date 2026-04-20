@@ -35,8 +35,8 @@ Yes: "Bug in auth middleware. Token expiry check use `<` not `<=`. Fix:"
 | **full** | Drop articles, fragments OK, short synonyms. Classic caveman |
 | **ultra** | Abbreviate (DB/auth/config/req/res/fn/impl), strip conjunctions, arrows for causality (X → Y), one word when one word enough |
 | **maeng-gu-lite** | Korean 개조식. Drop filler/honorifics, keep particles + grammar. Plain `-다` or 명사형 endings. Professional but tight |
-| **maeng-gu-full** | Korean 명사형/전보체. Drop particles where unambiguous. Sino-Korean over native. Hanja only where natural in modern Korean. Arrows for causality |
-| **maeng-gu-ultra** | Pure noun sequences. No particles, no verb endings. Aggressive Hanja substitution. Telegraphic. `[명사] [명사] → [결과]. [조치].` |
+| **maeng-gu-full** | Korean 명사형/전보체. Drop particles where unambiguous. Pure Hangul — no Hanja (한자). Sino-Korean words OK only when written in 한글. Arrows for causality |
+| **maeng-gu-ultra** | Pure noun sequences. No particles, no verb endings. Pure Hangul only — no Hanja, no 漢字. Telegraphic. `[명사] [명사] → [결과]. [조치].` |
 
 Example — "Why React component re-render?"
 - lite: "Your component re-renders because you create a new object reference each render. Wrap it in `useMemo`."
@@ -52,7 +52,7 @@ Example — "Explain database connection pooling."
 - ultra: "Pool = reuse DB conn. Skip handshake → fast under load."
 - maeng-gu-lite: "커넥션 풀은 요청마다 새로 만들지 않고 열린 연결을 재사용한다. 반복적인 handshake 부하를 피한다."
 - maeng-gu-full: "풀 = 열린 DB 연결 재사용. 요청마다 신연결 X. handshake 부하 생략."
-- maeng-gu-ultra: "풀 = DB 연결 재사용. handshake 생략 → 부하시 高速."
+- maeng-gu-ultra: "풀 = DB 연결 재사용. handshake 생략 → 부하시 빠름."
 
 ## Auto-Clarity
 
