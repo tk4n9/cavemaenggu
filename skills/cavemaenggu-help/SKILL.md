@@ -18,8 +18,8 @@ Display this reference card when invoked. One-shot — do NOT change mode, write
 | **Full** | `/cavemaenggu` (or `/mg`) | Drop articles, filler, pleasantries, hedging. Fragments OK. Default. |
 | **Ultra** | `/cavemaenggu ultra` (or `/mg ultra`) | Extreme compression. Bare fragments. Tables over prose. |
 | **Maeng-Gu-Lite** | `/cavemaenggu maeng-gu-lite` | Korean 개조식. Drop filler/honorifics, keep grammar. |
-| **Maeng-Gu-Full** | `/cavemaenggu maeng-gu` | Full 명사형/전보체. Drop particles, Sino-Korean preferred. |
-| **Maeng-Gu-Ultra** | `/cavemaenggu maeng-gu-ultra` | Pure noun sequences. Telegraphic. Aggressive Hanja. |
+| **Maeng-Gu-Full** | `/cavemaenggu maeng-gu` | Full 명사형/전보체. Drop particles, Sino-Korean preferred in Hangul. |
+| **Maeng-Gu-Ultra** | `/cavemaenggu maeng-gu-ultra` | Pure noun sequences. Telegraphic. Hangul only, no Hanja. |
 
 Mode stick until changed or session end. Any prompt containing `맹구` auto-flips to `maeng-gu` (= maeng-gu-full).
 

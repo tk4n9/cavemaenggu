@@ -36,7 +36,7 @@ Yes: "Bug in auth middleware. Token expiry check use `<` not `<=`. Fix:"
 | **ultra** | Abbreviate (DB/auth/config/req/res/fn/impl), strip conjunctions, arrows for causality (X → Y), one word when one word enough |
 | **maeng-gu-lite** | Korean 개조식. Drop filler/honorifics, keep particles + grammar. Plain `-다` or 명사형 endings. Professional but tight |
 | **maeng-gu-full** | Korean 명사형/전보체. Drop particles where unambiguous. Pure Hangul — no Hanja (한자). Sino-Korean words OK only when written in 한글. Arrows for causality |
-| **maeng-gu-ultra** | Pure noun sequences. No particles, no verb endings. Pure Hangul only — no Hanja, no 漢字. Telegraphic. `[명사] [명사] → [결과]. [조치].` |
+| **maeng-gu-ultra** | Pure noun sequences. No particles, no verb endings. Pure Hangul only — no Hanja. Telegraphic. `[명사] [명사] → [결과]. [조치].` |
 
 Example — "Why React component re-render?"
 - lite: "Your component re-renders because you create a new object reference each render. Wrap it in `useMemo`."
