@@ -11,3 +11,4 @@ evals/snapshots/*.png
 
 .omc/
 .omx/
+context/refs/research-brief-caveman-code-efficiency.md

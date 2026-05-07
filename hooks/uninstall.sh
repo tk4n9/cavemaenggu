@@ -10,7 +10,7 @@ HOOKS_DIR="$CLAUDE_DIR/hooks"
 SETTINGS="$CLAUDE_DIR/settings.json"
 FLAG_FILE="$CLAUDE_DIR/.cavemaenggu-active"
 
-HOOK_FILES=("package.json" "cavemaenggu-config.js" "cavemaenggu-activate.js" "cavemaenggu-mode-tracker.js" "cavemaenggu-statusline.sh")
+HOOK_FILES=("package.json" "cavemaenggu-config.js" "cavemaenggu-activate.js" "cavemaenggu-mode-tracker.js" "cavemaenggu-stats.js" "cavemaenggu-statusline.sh")
 
 # Detect if cavemaenggu is installed as a plugin (check plugin cache)
 PLUGIN_INSTALLED=0

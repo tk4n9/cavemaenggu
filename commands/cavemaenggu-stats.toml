@@ -1,0 +1,2 @@
+description = "Show real token usage and estimated cavemaenggu savings for this Claude Code session"
+prompt = "Run cavemaenggu stats for this session. The UserPromptSubmit hook should block this command and return measured stats directly. If the hook is unavailable, run `node hooks/cavemaenggu-stats.js {{args}}` and report the result."

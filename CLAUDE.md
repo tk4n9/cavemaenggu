@@ -34,6 +34,8 @@ Cavemaenggu makes AI coding agents respond in compressed caveman-style prose (En
 | `skills/cavemaenggu-commit/SKILL.md` | Commit message behavior. Fully independent skill. |
 | `skills/cavemaenggu-review/SKILL.md` | Code review behavior. Fully independent skill. |
 | `skills/cavemaenggu-help/SKILL.md` | Quick-reference card. One-shot display, not a persistent mode. |
+| `skills/cavemaenggu-stats/SKILL.md` | Claude Code stats receipt behavior. Hook-backed; model does not compute numbers. |
+| `skills/cavecrew/SKILL.md` | Delegation guide for compressed subagent presets. |
 | `cavemaenggu-compress/SKILL.md` | Compress sub-skill behavior. |
 
 ### Auto-generated / auto-synced — do not edit directly
@@ -70,7 +72,7 @@ CI bot commits as `github-actions[bot]`. After PR merge, wait for workflow befor
 
 ## Hook system (Claude Code)
 
-Three hooks in `hooks/` plus a `cavemaenggu-config.js` shared module and a `package.json` CommonJS marker. Communicate via flag file at `$CLAUDE_CONFIG_DIR/.cavemaenggu-active` (falls back to `~/.claude/.cavemaenggu-active`).
+Four hooks/scripts in `hooks/` plus a `cavemaenggu-config.js` shared module and a `package.json` CommonJS marker. Communicate via flag file at `$CLAUDE_CONFIG_DIR/.cavemaenggu-active` (falls back to `~/.claude/.cavemaenggu-active`).
 
 ```
 SessionStart hook ──writes "full"──▶ $CLAUDE_CONFIG_DIR/.cavemaenggu-active ◀──writes mode── UserPromptSubmit hook
@@ -89,8 +91,9 @@ All hooks honor `CLAUDE_CONFIG_DIR` for non-default Claude Code config locations
 
 Exports:
 - `getDefaultMode()` — resolves default mode from `CAVEMAENGGU_DEFAULT_MODE` env var, then `$XDG_CONFIG_HOME/cavemaenggu/config.json` / `~/.config/cavemaenggu/config.json` / `%APPDATA%\cavemaenggu\config.json`, then `'full'`
-- `safeWriteFlag(flagPath, content)` — symlink-safe flag write. Refuses if flag target or its immediate parent is a symlink. Opens with `O_NOFOLLOW` where supported. Atomic temp + rename. Creates with `0600`. Protects against local attackers replacing the predictable flag path with a symlink to clobber files writable by the user. Used by both write hooks. Silent-fails on all filesystem errors.
+- `safeWriteFlag(flagPath, content)` — symlink-safe flag write. Resolves symlinked parent dirs only when owned by current user / under home on Windows. Opens with `O_NOFOLLOW` where supported. Atomic temp + rename. Creates with `0600`. Protects against local attackers replacing the predictable flag path with a symlink to clobber files writable by the user. Used by both write hooks. Silent-fails on all filesystem errors.
 - `readFlag(flagPath)` — symlink-safe read with size cap (`MAX_FLAG_BYTES = 64`) and a `VALID_MODES` whitelist; anything else → null. Prevents oversized or arbitrary flag content from being trusted.
+- `appendFlag(filePath, line)` / `readHistory(filePath)` — symlink-safe stats history append/read helpers for `.cavemaenggu-history.jsonl`.
 
 ### `hooks/cavemaenggu-activate.js` — SessionStart hook
 
@@ -116,6 +119,8 @@ Reads JSON from stdin. Three responsibilities:
 - `/cavemaenggu-review` / `/mg-review` → `review`
 - `/cavemaenggu-compress` / `/mg-compress` → `compress`
 
+**Stats command.** `/cavemaenggu-stats` / `/mg-stats` blocks the prompt and returns measured Claude Code session stats from `hooks/cavemaenggu-stats.js`. Supported flags: `--share`, `--all`, `--since 7d`.
+
 **2. Natural-language activation/deactivation.** Matches phrases like "activate cavemaenggu", "talk like caveman", "cavemaenggu mode", and Hangul triggers via `/맹구/u` (e.g. "맹구야", "맹구 모드", "맹구 켜") and writes the configured default mode. Matches "stop caveman", "disable cavemaenggu", "normal mode", "보통 모드", "맹구 꺼" etc. and deletes the flag file. The English regex stays `cavemaenggu|caveman` so existing muscle memory from upstream caveman keeps working — that back-compat is intentional.
 
 **3. Per-turn reinforcement.** When flag is set to a non-independent mode (i.e. not `commit`/`review`/`compress`), emits a small `hookSpecificOutput` JSON reminder so the model keeps cavemaenggu style after other plugins inject competing instructions mid-conversation. The full ruleset still comes from SessionStart — this is just an attention anchor.
@@ -125,6 +130,7 @@ Reads JSON from stdin. Three responsibilities:
 Reads flag file at `$CLAUDE_CONFIG_DIR/.cavemaenggu-active`. Outputs colored badge string for Claude Code statusline:
 - `full` or empty → `[MAENGGU]` (orange)
 - anything else → `[MAENGGU:<MODE_UPPERCASED>]` (orange) — e.g. `[MAENGGU:ULTRA]`, `[MAENGGU:MAENG-GU]`
+- optional savings suffix from `.cavemaenggu-statusline-suffix`, written by `/cavemaenggu-stats`; disable with `CAVEMAENGGU_STATUSLINE_SAVINGS=0`
 
 Configured in `settings.json` under `statusLine.command`. PowerShell counterpart at `hooks/cavemaenggu-statusline.ps1` for Windows.
 
@@ -158,9 +164,19 @@ Sub-skill in `cavemaenggu-compress/SKILL.md`. Takes file path, compresses prose 
 
 Independent skills in `skills/cavemaenggu-commit/SKILL.md` and `skills/cavemaenggu-review/SKILL.md`. Both have own `description` and `name` frontmatter so they load independently. cavemaenggu-commit: Conventional Commits, ≤50 char subject. cavemaenggu-review: one-line comments in `L<line>: <severity> <problem>. <fix>.` format.
 
+### cavemaenggu-stats / cavemaenggu-init / cavecrew
+
+- `cavemaenggu-stats` is hook-backed. `hooks/cavemaenggu-mode-tracker.js` intercepts `/cavemaenggu-stats`, calls `hooks/cavemaenggu-stats.js`, and returns a `decision: "block"` JSON response. Do not ask the model to estimate numbers.
+- `tools/cavemaenggu-init.js` writes repo-local always-on rule files for Cursor, Windsurf, Cline, Copilot, and `AGENTS.md`. Commands: `/cavemaenggu-init`, `/mg-init`.
+- `cavecrew` ships compressed subagent presets in `agents/` and plugin copies in `plugins/cavemaenggu/agents/`.
+
+### cavemaenggu-shrink
+
+MCP stdio proxy in `mcp-servers/cavemaenggu-shrink/`. Wraps an upstream MCP server and compresses prose fields (default: `description`) in `tools/list`, `prompts/list`, and `resources/list`. Env vars: `CAVEMAENGGU_SHRINK_FIELDS`, `CAVEMAENGGU_SHRINK_DEBUG`.
+
 ### Slash commands
 
-`commands/` ships paired TOML files: each `cavemaenggu*.toml` has a `mg*.toml` twin with identical prompt, so `/mg`, `/mg-commit`, `/mg-review` resolve through Claude Code's command system to the same prompts.
+`commands/` ships paired TOML files: each `cavemaenggu*.toml` has a `mg*.toml` twin with identical prompt, so `/mg`, `/mg-commit`, `/mg-review`, `/mg-init`, and `/mg-stats` resolve through Claude Code's command system to the same prompts.
 
 ---
 

@@ -25,7 +25,7 @@
 
 ---
 
-A [Claude Code](https://docs.anthropic.com/en/docs/claude-code) skill/plugin and Codex plugin that makes agent talk like smart caveman — cutting **~75% of output tokens** while keeping full technical accuracy. Now with [맹구 mode](#맹구-maeng-gu-mode), [terse commits](#cavemaenggu-commit), [one-line code reviews](#cavemaenggu-review), and a [compression tool](#cavemaenggu-compress) that cuts **~46% of input tokens** every session.
+A [Claude Code](https://docs.anthropic.com/en/docs/claude-code) skill/plugin and Codex plugin that makes agent talk like smart caveman — cutting **~75% of output tokens** while keeping full technical accuracy. Now with [맹구 mode](#맹구-maeng-gu-mode), [terse commits](#cavemaenggu-commit), [one-line code reviews](#cavemaenggu-review), [session stats](#cavemaenggu-stats), and a [compression tool](#cavemaenggu-compress) that cuts **~46% of input tokens** every session.
 
 Cavemaenggu = **caveman** (English compression) + **맹구** (Korean compression family). Forked from [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman), adds the maeng-gu family for Korean 개조식/전보체 output. Same brain. Two languages. Same compression.
 
@@ -125,6 +125,12 @@ Cavemaenggu = **caveman** (English compression) + **맹구** (Korean compression
 
 Pick your agent. One command. Done.
 
+Auto-detect installer:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/tk4n9/cavemaenggu/main/install.sh | bash
+```
+
 | Agent | Install |
 |-------|---------|
 | **Claude Code** | `claude plugin marketplace add tk4n9/cavemaenggu && claude plugin install cavemaenggu@cavemaenggu` |
@@ -152,6 +158,7 @@ Auto-activation is built in for Claude Code, Gemini CLI, and the repo-local Code
 | cavemaenggu-commit | Y | — | Y | Y | Y | Y | Y |
 | cavemaenggu-review | Y | — | Y | Y | Y | Y | Y |
 | cavemaenggu-compress | Y | Y | Y | Y | Y | Y | Y |
+| cavemaenggu-stats | Y | — | — | — | — | — | — |
 | cavemaenggu-help | Y | — | Y | Y | Y | Y | Y |
 
 > [!NOTE]
@@ -342,6 +349,22 @@ Level stick until you change it or session end.
 ### cavemaenggu-help
 
 `/cavemaenggu-help` — quick-reference card. All modes, skills, commands, one command away.
+
+### cavemaenggu-stats
+
+`/cavemaenggu-stats` (or `/mg-stats`) — real Claude Code session output tokens, cache-read tokens, estimated savings, optional `--share`, `--all`, `--since 7d`.
+
+### cavemaenggu-init
+
+`/cavemaenggu-init` (or `/mg-init`) — writes always-on rule files into current repo for Cursor, Windsurf, Cline, Copilot, and `AGENTS.md`. Use `--dry-run` first unless you pass `--force`.
+
+### cavecrew
+
+Compressed subagent presets for Claude Code: investigator, builder, reviewer. Same work, shorter tool-result payloads.
+
+### cavemaenggu-shrink
+
+MCP stdio proxy that compresses tool/prompt/resource descriptions before the model reads them. See [`mcp-servers/cavemaenggu-shrink`](mcp-servers/cavemaenggu-shrink/).
 
 ### cavemaenggu-compress
 

@@ -11,7 +11,7 @@ $HooksDir = Join-Path $ClaudeDir "hooks"
 $Settings = Join-Path $ClaudeDir "settings.json"
 $FlagFile = Join-Path $ClaudeDir ".cavemaenggu-active"
 
-$HookFiles = @("package.json", "cavemaenggu-config.js", "cavemaenggu-activate.js", "cavemaenggu-mode-tracker.js", "cavemaenggu-statusline.sh", "cavemaenggu-statusline.ps1")
+$HookFiles = @("package.json", "cavemaenggu-config.js", "cavemaenggu-activate.js", "cavemaenggu-mode-tracker.js", "cavemaenggu-stats.js", "cavemaenggu-statusline.sh", "cavemaenggu-statusline.ps1")
 
 # Detect if cavemaenggu is installed as a plugin
 $PluginInstalled = $false

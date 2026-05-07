@@ -1,0 +1,2 @@
+description = "Short alias for /cavemaenggu-init"
+prompt = "Run `node tools/cavemaenggu-init.js {{args}}` in the current repo and report the result. Use --dry-run first if the user did not pass --force, so we never silently overwrite an existing rule file."

@@ -37,7 +37,7 @@ HOOKS_DIR="$CLAUDE_DIR/hooks"
 SETTINGS="$CLAUDE_DIR/settings.json"
 REPO_URL="https://raw.githubusercontent.com/tk4n9/cavemaenggu/main/hooks"
 
-HOOK_FILES=("package.json" "cavemaenggu-config.js" "cavemaenggu-activate.js" "cavemaenggu-mode-tracker.js" "cavemaenggu-statusline.sh")
+HOOK_FILES=("package.json" "cavemaenggu-config.js" "cavemaenggu-activate.js" "cavemaenggu-mode-tracker.js" "cavemaenggu-stats.js" "cavemaenggu-statusline.sh")
 
 # Resolve source — works from repo clone or curl pipe
 SCRIPT_DIR=""

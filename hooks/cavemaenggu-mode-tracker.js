@@ -7,7 +7,12 @@
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
-const { getDefaultMode, safeWriteFlag, readFlag } = require('./cavemaenggu-config');
+const { execFileSync } = require('child_process');
+const { getDefaultMode, safeWriteFlag, readFlag, VALID_MODES } = require('./cavemaenggu-config');
+
+// Modes handled by their own slash commands, not selectable via
+// /cavemaenggu <arg>.
+const INDEPENDENT_MODES = new Set(['commit', 'review', 'compress']);
 
 const claudeDir = process.env.CLAUDE_CONFIG_DIR || path.join(os.homedir(), '.claude');
 const flagPath = path.join(claudeDir, '.cavemaenggu-active');
@@ -63,6 +68,33 @@ process.stdin.on('end', () => {
       }
     }
 
+    // /cavemaenggu-stats [--share|--all|--since Nd/Nh] — block the prompt and
+    // inject stats output as the hook reason. The script reads the active
+    // session log, so pass transcript_path through when Claude Code provides it.
+    const statsMatch = /^\/(?:cavemaenggu|mg)(?::cavemaenggu)?-stats(?:\s+(.*))?$/.exec(prompt);
+    if (statsMatch) {
+      const tailArgs = (statsMatch[1] || '').trim().split(/\s+/).filter(Boolean);
+      try {
+        const statsPath = path.join(__dirname, 'cavemaenggu-stats.js');
+        const argv = [statsPath];
+        if (data.transcript_path) argv.push('--session-file', data.transcript_path);
+        if (tailArgs.includes('--share')) argv.push('--share');
+        if (tailArgs.includes('--all')) argv.push('--all');
+        const sinceIdx = tailArgs.indexOf('--since');
+        if (sinceIdx !== -1 && tailArgs[sinceIdx + 1]) {
+          argv.push('--since', tailArgs[sinceIdx + 1]);
+        }
+        const out = execFileSync(process.execPath, argv, { encoding: 'utf8', timeout: 5000 });
+        process.stdout.write(JSON.stringify({ decision: 'block', reason: out.trim() }));
+      } catch (e) {
+        process.stdout.write(JSON.stringify({
+          decision: 'block',
+          reason: 'cavemaenggu-stats: could not run stats script.\nTry manually: node hooks/cavemaenggu-stats.js'
+        }));
+      }
+      return;
+    }
+
     // Match /cavemaenggu and /mg slash commands. /caveman is intentionally NOT
     // matched here — that namespace belongs to the upstream caveman plugin so
     // both can be installed side by side without collision.
@@ -84,12 +116,10 @@ process.stdin.on('end', () => {
       } else if (cmd === '/cavemaenggu' ||
                  cmd === '/cavemaenggu:cavemaenggu' ||
                  cmd === '/mg') {
-        if (arg === 'lite') mode = 'lite';
-        else if (arg === 'ultra') mode = 'ultra';
-        else if (arg === 'maeng-gu-lite') mode = 'maeng-gu-lite';
-        else if (arg === 'maeng-gu' || arg === 'maeng-gu-full') mode = 'maeng-gu';
-        else if (arg === 'maeng-gu-ultra') mode = 'maeng-gu-ultra';
-        else mode = getDefaultMode();
+        if (!arg) mode = getDefaultMode();
+        else if (arg === 'off' || arg === 'stop' || arg === 'disable') mode = 'off';
+        else if (arg === 'maeng-gu-full') mode = 'maeng-gu';
+        else if (VALID_MODES.includes(arg) && !INDEPENDENT_MODES.has(arg)) mode = arg;
       }
 
       if (mode && mode !== 'off') {
@@ -120,7 +150,6 @@ process.stdin.on('end', () => {
     // If the flag is missing, corrupted, oversized, or a symlink pointing at
     // something like ~/.ssh/id_rsa, readFlag returns null and we emit nothing
     // — never inject untrusted bytes into model context.
-    const INDEPENDENT_MODES = new Set(['commit', 'review', 'compress']);
     const activeMode = readFlag(flagPath);
     if (activeMode && !INDEPENDENT_MODES.has(activeMode)) {
       process.stdout.write(JSON.stringify({
